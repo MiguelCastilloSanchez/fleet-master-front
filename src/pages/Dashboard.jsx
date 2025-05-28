@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import '../styles/Dashboard.css';
 import Modal from './ModalForm';
 
 import DriverForm from './Drivers/DriverForm';
 import DriverUpdate from './Drivers/DriverUpdate';
+import DriverItem from '.././components/Drivers/DriverItem.jsx';
 
 import VehicleForm from './Vehicles/VehicleForm';
 import VehicleUpdate from './Vehicles/VehicleUpdate';
@@ -20,6 +21,10 @@ import RouteUpdate from './Routes/RouteUpdate';
 import UserForm from './Users/UserForm';
 import UserUpdate from './Users/UserUpdate';
 
+import { getDrivers } from '../services/driverServiceApi.js'; 
+import { deleteDriver } from '../services/driverServiceApi.js';
+
+import Search from '../components/SearchForm.jsx'
 
 function Dashboard() {
 
@@ -33,12 +38,21 @@ function Dashboard() {
   ];
 
   const [activeForm, setActiveForm] = useState(null);
+  const [drivers, setDrivers] = useState([]);
+  const [activeEntity, setActiveEntity] = useState(null);
+
 
   const closeModal = () => setActiveForm(null);
 
   const handleClick = (formName) => {
     setActiveForm(formName);
   };
+
+  const [selectedId, setSelectedId] = useState(null);
+  const handleSetActiveForm = (formType, id = null) => {
+  setActiveForm(formType);
+  setSelectedId(id);
+};
 
   const openConfirmation = (tipo, id) => {
     setConfirmationModal({ abierto: true, tipo, id });
@@ -55,6 +69,39 @@ function Dashboard() {
     borrarEntidad(tipo, id);
     setConfirmationModal({ abierto: false, tipo: '', id: null });
   };
+
+  async function listarEntidades(entidad) {
+    resetList();
+  switch (entidad) {
+    case 'vehiculo':
+      resetList();
+      alert('Listar' + entidad);
+      return
+    case 'conductor':
+      const driversData = await getDrivers();
+      setDrivers(driversData);
+      setActiveEntity(entidad);
+      return
+    case 'destino':
+      alert('Listar' + entidad);
+      return
+    case 'asignacion':
+      alert('Listar' + entidad);
+      return
+    case 'ruta':
+      alert('Listar' + entidad);
+      return
+    case 'admin':
+      alert('Listar' + entidad);
+      return
+    default:
+      return null;
+  }
+}
+
+  function resetList(){
+    setDrivers([]);
+  }
 
   const renderForm = () => {
     switch (activeForm) {
@@ -73,7 +120,7 @@ function Dashboard() {
       case 'vehiculoUpdate':
         return <VehicleUpdate />;
       case 'conductorUpdate':
-        return <DriverUpdate />;
+        return <DriverUpdate driverId={selectedId}/>;
       case 'destinoUpdate':
         return <CoordinateUpdate />;
       case 'asignacionUpdate':
@@ -172,57 +219,11 @@ function Dashboard() {
 
           <div id="resultados" className='items-center justify-center p-4'>
             <ul id="lista-resultados" className="text-left">
-              <li>
-                <h4>Nombre: Ejemplo Driver</h4>
-                <p>Fecha de Nacimiento: 1988-11-10</p>
-                <p>Curp: TOAA881110MDFRNR08</p>
-                <p>Dirección: Av. Tecnológico #456, Mérida, Yucatán</p>
-                <p>Salario: 13500.50</p>
-                <p>Número de Licencia: 1234567891</p>
-                <p>Fecha de entrada al sistema: 2024-01-12</p>
-                <button onClick={() => setActiveForm('conductorUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-                <button onClick={() => openConfirmation('conductor', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-              </li>
-              <li>
-                <h4>Marca: Ejemplo Vehículo</h4>
-                <p>vin: 3N1AB7AP6KY321456</p>
-                <p>Matrícula: YUC5678</p>
-                <p>Fecha de compra: 2022-10-10</p>
-                <p>Costo: 220000.00</p>
-                <p>photoUrl: https://example.com/photos/nissan.jpg</p>
-                <p>Fecha de registro: 2022-10-15</p>
-                <button onClick={() => setActiveForm('vehiculoUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-                <button onClick={() => openConfirmation('vehiculo', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-              </li>
-              <li>
-                <h4>Nombre: Ejemplo Coordenada</h4>
-                <p>Latitud: 40.967370</p>
-                <p>Altitud: 40.967370</p>
-                <button onClick={() => setActiveForm('destinoUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-                <button onClick={() => openConfirmation('destino', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-              </li>
-              <li>
-                <h4>Nombre: Ejemplo Asignación</h4>
-                <p>driverId: 1</p>
-                <p>vehicleId: 1</p>
-                <p>Fecha de asignación: 2025-04-29</p>
-                <button onClick={() => setActiveForm('asignacionUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-                <button onClick={() => openConfirmation('asignacion', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-              </li>
-              <li>
-                <h4>Nombre: Ejemplo Ruta</h4>
-                <p>Fecha de Viaje: 2029-10-10</p>
-                <p>Destino: NOMBRE COORDENADA</p>
-                <p>Conductor: NOMBRE CONDUCTOR</p>
-                <p>Vehículo: NOMBRE VEHÍCULO</p>
-                <button onClick={() => setActiveForm('rutaUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-                <button onClick={() => openConfirmation('ruta', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-              </li>
-              <li>
-                <h4>Nombre: Ejemplo Admin</h4>
-                <button onClick={() => setActiveForm('adminUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-                <button onClick={() => openConfirmation('admin', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-              </li>
+              {drivers.length > 0 && (
+                drivers.map((driver) => (
+                <DriverItem key={driver.id} driver={driver}  setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
+              ))
+              )}
             </ul>
 
           </div>
@@ -252,6 +253,10 @@ function Dashboard() {
       </main>
     </>
   );
+
+  
+
+
 }
 
 function Card({ title, count }) {
@@ -268,30 +273,6 @@ function Card({ title, count }) {
 
 export default Dashboard;
 
-function listarEntidades(entidad) {
-  switch (entidad) {
-    case 'vehiculo':
-      alert('Listar' + entidad);
-      return
-    case 'conductor':
-      alert('Listar' + entidad);
-      return
-    case 'destino':
-      alert('Listar' + entidad);
-      return
-    case 'asignacion':
-      alert('Listar' + entidad);
-      return
-    case 'ruta':
-      alert('Listar' + entidad);
-      return
-    case 'admin':
-      alert('Listar' + entidad);
-      return
-    default:
-      return null;
-  }
-}
 
 function borrarEntidad(tipo, id) {
   switch (tipo) {
@@ -300,8 +281,7 @@ function borrarEntidad(tipo, id) {
       console.log(`Eliminar ${tipo} con ID: ${id}`);
       return
     case 'conductor':
-      alert('Borrar ' + tipo + ' con id: ' + id);
-      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      deleteDriver(id);
       return
     case 'destino':
       alert('Borrar ' + tipo + ' con id: ' + id);
@@ -324,4 +304,3 @@ function borrarEntidad(tipo, id) {
   }
 
 }
-
