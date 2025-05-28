@@ -25,8 +25,7 @@ main {
 /* Buscador */
 #search-form {
     display: flex;
-    width: 75%;
-    margin: 20px auto;
+    width: 100%;
     border-radius: 5px;
     overflow: hidden;    /* esconde las sugerencias */
     position: relative;
@@ -36,42 +35,28 @@ main {
     overflow: visible;
 }
 
-/* Sugerencias */
-#sugerencias {
-    position: absolute;
-    left: 0;
-    top: 100%;
-    width: 100%;
-    opacity: 90%;
+
+/* Filtros */
+#filtros {
+    width: 80%;
+    height: fit-content;
+    border-radius: 3%;
     background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 0 0 5px 5px;
-    z-index: 10;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 1px 10px 1px 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
 }
 
-#lista-sugerencias {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    list-style: none;
-    text-decoration: none;
-}
-
-#lista-sugerencias li {
-    padding: 10px;
+#filtros ul {
     font-style: italic;
-    color: #878787;
+    width: fit-content;
+    list-style-type: none;
+    padding: 5px;
 }
 
-#lista-sugerencias li:hover {
-    background-color: #eee;
-}
 
 /* Resultados */
 #resultados {
-    width: 85%;
+    width: 100%;
 }
 
 #lista-resultados {

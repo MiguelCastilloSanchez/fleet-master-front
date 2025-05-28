@@ -1,22 +1,47 @@
+import React, { useState } from 'react';
+
 import '../styles/Dashboard.css';
 import Modal from './ModalForm';
+
 import DriverForm from './Drivers/DriverForm';
+import DriverUpdate from './Drivers/DriverUpdate';
+
 import VehicleForm from './Vehicles/VehicleForm';
+import VehicleUpdate from './Vehicles/VehicleUpdate';
+
 import CoordinateForm from './Coordinates/CoordinateForm';
+
 import AssignmentForm from './Assignment/AssignmentForm';
+import AssignmentUpdate from './Assignment/AssignmentUpdate';
+
 import RouteForm from './Routes/RouteForm';
+import RouteUpdate from './Routes/RouteUpdate';
+
 import UserForm from './Users/UserForm';
+import UserUpdate from './Users/UserUpdate';
+
 
 function Dashboard() {
+
+  const entities = [
+    { name: 'Conductores', label: 'Crear conductor', value: 'conductor' },
+    { name: 'Vehículos', label: 'Crear vehículo', value: 'vehiculo' },
+    { name: 'Destinos', label: 'Crear destino', value: 'destino' },
+    { name: 'Asingaciones', label: 'Crear asignación', value: 'asignacion' },
+    { name: 'Rutas', label: 'Crear ruta', value: 'ruta' },
+    { name: 'Administradores', label: 'Opciones de administrador', value: 'admin' },
+  ];
 
   const [activeForm, setActiveForm] = useState(null);
 
   const closeModal = () => setActiveForm(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Crear el registro
-    closeModal();
+  const handleClick = (formName) => {
+    setActiveForm(formName);
+  };
+
+  const openConfirmation = (tipo, id) => {
+    setConfirmationModal({ abierto: true, tipo, id });
   };
 
   const [modalConfirmacion, setConfirmationModal] = useState({
@@ -25,33 +50,38 @@ function Dashboard() {
     id: null,
   });
 
-  const openConfirmation = (tipo, id) => {
-    setConfirmationModal({ abierto: true, tipo, id });
-  };
-
   const confirmDeletion = () => {
     const { tipo, id } = modalConfirmacion;
-    // Eliminar el registro según tipo e id
-    console.log(`Eliminar ${tipo} con ID: ${id}`);
+    borrarEntidad(tipo, id);
     setConfirmationModal({ abierto: false, tipo: '', id: null });
   };
-
-
 
   const renderForm = () => {
     switch (activeForm) {
       case 'vehiculo':
-        return <VehicleForm onSubmit={handleSubmit} />;
+        return <VehicleForm />;
       case 'conductor':
-        return <DriverForm onSubmit={handleSubmit} />;
+        return <DriverForm />;
       case 'destino':
-        return <CoordinateForm onSubmit={handleSubmit} />;
+        return <CoordinateForm />;
       case 'asignacion':
-        return <AssignmentForm onSubmit={handleSubmit} />;
+        return <AssignmentForm />;
       case 'ruta':
-        return <RouteForm onSubmit={handleSubmit} />;
+        return <RouteForm />;
       case 'admin':
-        return <UserForm onSubmit={handleSubmit} />;
+        return <UserUpdate />;
+      case 'vehiculoUpdate':
+        return <VehicleUpdate />;
+      case 'conductorUpdate':
+        return <DriverUpdate />;
+      case 'destinoUpdate':
+        return <CoordinateUpdate />;
+      case 'asignacionUpdate':
+        return <AssignmentUpdate />;
+      case 'rutaUpdate':
+        return <RouteUpdate />;
+      case 'adminUpdate':
+        return <UserUpdate />;
       default:
         return null;
     }
@@ -84,15 +114,17 @@ function Dashboard() {
       </div>
 
       <div className="inset-x-0 border-b border-gray-950/5 dark:border-white/10 m-4">
-        <div className=" rounded-lg bg-white dark:bg-gray-950">
+        <div className=" rounded-full bg-white dark:bg-gray-950">
           <div className="flex items-center justify-between gap-8 px-4 sm:px-6">
-            <div className="flex items-center gap-6 overflow-x-auto p-5">
-              <button onClick={() => setActiveForm('conductor')} className="font-bold px-3 py-2 text-slate-700 rounded-lg bg-inherit hover:bg-slate-100 hover:text-slate-900 dark:text-white">Crear conductor</button>
-              <button onClick={() => setActiveForm('vehiculo')} className="font-bold px-3 py-2 text-slate-700 rounded-lg bg-inherit hover:bg-slate-100 hover:text-slate-900 dark:text-white">Crear vehículo</button>
-              <button onClick={() => setActiveForm('destino')} className="font-bold px-3 py-2 text-slate-700 rounded-lg bg-inherit hover:bg-slate-100 hover:text-slate-900 dark:text-white">Crear destino</button>
-              <button onClick={() => setActiveForm('asignacion')} className="font-bold px-3 py-2 text-slate-700 rounded-lg bg-inherit hover:bg-slate-100 hover:text-slate-900 dark:text-white">Crear asignación</button>
-              <button onClick={() => setActiveForm('ruta')} className="font-bold px-3 py-2 text-slate-700 rounded-lg bg-inherit hover:bg-slate-100 hover:text-slate-900 dark:text-white">Crear ruta</button>
-              <button onClick={() => setActiveForm('admin')} className="font-bold px-3 py-2 text-slate-700 rounded-lg bg-inherit hover:bg-slate-100 hover:text-slate-900 dark:text-white">Opciones de administrador</button>
+            <div className="flex items-center gap-6 overflow-x-auto p-1">
+              {entities.map((form) => (
+                <button
+                  key={form.value}
+                  onClick={() => handleClick(form.value)}
+                  className="font-bold px-3 py-2 text-slate-700 rounded-lg bg-inherit hover:bg-slate-100 hover:text-slate-900 dark:text-white">
+                  {form.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -107,83 +139,93 @@ function Dashboard() {
         </div>
       </div>
 
-
       <Modal isOpen={!!activeForm} onClose={closeModal}>
         <h2 className="text-xl font-bold mb-4 capitalize">Formulario de {activeForm}</h2>
         {renderForm()}
       </Modal>
 
-
-      <form id="search-form">
-        <input type="text" className='placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' placeholder="Busca aquí..." autoComplete="off"></input>
-        <label className="relative block">
-          <span className="sr-only">Search</span>
-          <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-            <svg className="h-5 w-5 fill-slate-300" viewBox="0 0 20 20"></svg>
-          </span>
-        </label>
-        <select className='"w-full px-4 py-2 mx-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'>
-          <option value="opcion1">Por nombre</option>
-          <option value="opcion2" selected>Por id</option>
-        </select>
-      </form >
-
-      <main>
-        <div id="resultados" className='items-center justify-center p-4'>
-          <ul id="lista-resultados" className="text-left">
-            <li>
-              <h4>Nombre: Ejemplo Driver</h4>
-              <p>Fecha de Nacimiento: 1988-11-10</p>
-              <p>Curp: TOAA881110MDFRNR08</p>
-              <p>Dirección: Av. Tecnológico #456, Mérida, Yucatán</p>
-              <p>Salario: 13500.50</p>
-              <p>Número de Licencia: 1234567891</p>
-              <p>Fecha de entrada al sistema: 2024-01-12</p>
-              <button onClick={() => setActiveForm('conductor')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-              <button onClick={() => openConfirmation('conductor', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-            </li>
-            <li>
-              <h4>Marca: Ejemplo Vehículo</h4>
-              <p>vin: 3N1AB7AP6KY321456</p>
-              <p>Matrícula: YUC5678</p>
-              <p>Fecha de compra: 2022-10-10</p>
-              <p>Costo: 220000.00</p>
-              <p>photoUrl: https://example.com/photos/nissan.jpg</p>
-              <p>Fecha de registro: 2022-10-15</p>
-              <button onClick={() => setActiveForm('vehiculo')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-              <button onClick={() => openConfirmation('vehiculo', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-            </li>
-            <li>
-              <h4>Nombre: Ejemplo Coordenada</h4>
-              <p>Latitud: 40.967370</p>
-              <p>Altitud: 40.967370</p>
-              <button onClick={() => setActiveForm('destino')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-              <button onClick={() => openConfirmation('destino', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-            </li>
-            <li>
-              <h4>Nombre: Ejemplo Asignación</h4>
-              <p>driverId: 1</p>
-              <p>vehicleId: 1</p>
-              <p>Fecha de asignación: 2025-04-29</p>
-              <button onClick={() => setActiveForm('asignacion')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-              <button onClick={() => openConfirmation('asignacion', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-            </li>
-            <li>
-              <h4>Nombre: Ejemplo Ruta</h4>
-              <p>Fecha de Viaje: 2029-10-10</p>
-              <p>Destino: NOMBRE COORDENADA</p>
-              <p>Conductor: NOMBRE CONDUCTOR</p>
-              <p>Vehículo: NOMBRE VEHÍCULO</p>
-              <button onClick={() => setActiveForm('ruta')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-              <button onClick={() => openConfirmation('ruta', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-            </li>
-            <li>
-              <h4>Nombre: Ejemplo Admin</h4>
-              <button onClick={() => setActiveForm('admin')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
-              <button onClick={() => openConfirmation('admin', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
-            </li>
+      <main className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[1fr_3fr] gap-4 items-start px-1'>
+        <div id="filtros" className='bg-slate-100 w-fit mx-auto'>
+          <h3>Listar entidades</h3>
+          <ul>
+            {entities.map((entitie) => (
+              <button
+                key={entitie.name}
+                onClick={() => listarEntidades(entitie.value)}
+                className="bg-blue-500 text-white px-4 py-2 rounded m-1 w-full">
+                {entitie.name}
+              </button>
+            ))}
           </ul>
+        </div>
 
+        <div>
+          <form id="search-form" className='bg-slate-200'>
+            <input type="text" className='placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3  shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' placeholder="Busca aquí..." autoComplete="off"></input>
+            <label className="relative block">
+              <span className="sr-only">Search</span>
+              <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+                <svg className="h-5 w-5 fill-slate-300" viewBox="0 0 20 20"></svg>
+              </span>
+            </label>
+          </form >
+
+          <div id="resultados" className='items-center justify-center p-4'>
+            <ul id="lista-resultados" className="text-left">
+              <li>
+                <h4>Nombre: Ejemplo Driver</h4>
+                <p>Fecha de Nacimiento: 1988-11-10</p>
+                <p>Curp: TOAA881110MDFRNR08</p>
+                <p>Dirección: Av. Tecnológico #456, Mérida, Yucatán</p>
+                <p>Salario: 13500.50</p>
+                <p>Número de Licencia: 1234567891</p>
+                <p>Fecha de entrada al sistema: 2024-01-12</p>
+                <button onClick={() => setActiveForm('conductorUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
+                <button onClick={() => openConfirmation('conductor', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
+              </li>
+              <li>
+                <h4>Marca: Ejemplo Vehículo</h4>
+                <p>vin: 3N1AB7AP6KY321456</p>
+                <p>Matrícula: YUC5678</p>
+                <p>Fecha de compra: 2022-10-10</p>
+                <p>Costo: 220000.00</p>
+                <p>photoUrl: https://example.com/photos/nissan.jpg</p>
+                <p>Fecha de registro: 2022-10-15</p>
+                <button onClick={() => setActiveForm('vehiculoUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
+                <button onClick={() => openConfirmation('vehiculo', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
+              </li>
+              <li>
+                <h4>Nombre: Ejemplo Coordenada</h4>
+                <p>Latitud: 40.967370</p>
+                <p>Altitud: 40.967370</p>
+                <button onClick={() => setActiveForm('destinoUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
+                <button onClick={() => openConfirmation('destino', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
+              </li>
+              <li>
+                <h4>Nombre: Ejemplo Asignación</h4>
+                <p>driverId: 1</p>
+                <p>vehicleId: 1</p>
+                <p>Fecha de asignación: 2025-04-29</p>
+                <button onClick={() => setActiveForm('asignacionUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
+                <button onClick={() => openConfirmation('asignacion', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
+              </li>
+              <li>
+                <h4>Nombre: Ejemplo Ruta</h4>
+                <p>Fecha de Viaje: 2029-10-10</p>
+                <p>Destino: NOMBRE COORDENADA</p>
+                <p>Conductor: NOMBRE CONDUCTOR</p>
+                <p>Vehículo: NOMBRE VEHÍCULO</p>
+                <button onClick={() => setActiveForm('rutaUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
+                <button onClick={() => openConfirmation('ruta', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
+              </li>
+              <li>
+                <h4>Nombre: Ejemplo Admin</h4>
+                <button onClick={() => setActiveForm('adminUpdate')} className="bg-blue-500 text-white px-4 py-2 rounded mx-3">Editar</button>
+                <button onClick={() => openConfirmation('admin', 1)} className="text-red-600 hover:underline mx-3">Eliminar</button>
+              </li>
+            </ul>
+
+          </div>
         </div>
 
         <Modal isOpen={modalConfirmacion.abierto} onClose={() => setConfirmationModal({ abierto: false, tipo: '', id: null })}>
@@ -206,8 +248,8 @@ function Dashboard() {
             </div>
           </div>
         </Modal>
-      </main>
 
+      </main>
     </>
   );
 }
@@ -226,6 +268,60 @@ function Card({ title, count }) {
 
 export default Dashboard;
 
-import React, { useState } from 'react';
+function listarEntidades(entidad) {
+  switch (entidad) {
+    case 'vehiculo':
+      alert('Listar' + entidad);
+      return
+    case 'conductor':
+      alert('Listar' + entidad);
+      return
+    case 'destino':
+      alert('Listar' + entidad);
+      return
+    case 'asignacion':
+      alert('Listar' + entidad);
+      return
+    case 'ruta':
+      alert('Listar' + entidad);
+      return
+    case 'admin':
+      alert('Listar' + entidad);
+      return
+    default:
+      return null;
+  }
+}
 
+function borrarEntidad(tipo, id) {
+  switch (tipo) {
+    case 'vehiculo':
+      alert('Borrar ' + tipo + ' con id: ' + id);
+      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      return
+    case 'conductor':
+      alert('Borrar ' + tipo + ' con id: ' + id);
+      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      return
+    case 'destino':
+      alert('Borrar ' + tipo + ' con id: ' + id);
+      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      return
+    case 'asignacion':
+      alert('Borrar ' + tipo + ' con id: ' + id);
+      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      return
+    case 'ruta':
+      alert('Borrar ' + tipo + ' con id: ' + id);
+      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      return
+    case 'admin':
+      alert('Borrar ' + tipo + ' con id: ' + id);
+      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      return
+    default:
+      return null;
+  }
+
+}
 
