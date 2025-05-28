@@ -11,6 +11,7 @@ import VehicleForm from './Vehicles/VehicleForm';
 import VehicleUpdate from './Vehicles/VehicleUpdate';
 
 import CoordinateForm from './Coordinates/CoordinateForm';
+import CoordinateItem from '../components/Coordinates/CoordinateItem.jsx';
 
 import AssignmentForm from './Assignment/AssignmentForm';
 import AssignmentUpdate from './Assignment/AssignmentUpdate';
@@ -23,6 +24,10 @@ import UserUpdate from './Users/UserUpdate';
 
 import { getDrivers } from '../services/driverServiceApi.js'; 
 import { deleteDriver } from '../services/driverServiceApi.js';
+import { deleteCoordinate, getCoordinates } from '../services/coordinatesServiceApi.js';
+
+
+import SearchForm from '../components/SearchForm.jsx';
 
 
 function Dashboard() {
@@ -38,6 +43,7 @@ function Dashboard() {
 
   const [activeForm, setActiveForm] = useState(null);
   const [drivers, setDrivers] = useState([]);
+  const [coordinates, setCoordinates] = useState([]);
   const [activeEntity, setActiveEntity] = useState(null);
 
 
@@ -71,18 +77,18 @@ function Dashboard() {
 
   async function listarEntidades(entidad) {
     resetList();
+    setActiveEntity(entidad);
   switch (entidad) {
     case 'vehiculo':
-      resetList();
       alert('Listar' + entidad);
       return
     case 'conductor':
       const driversData = await getDrivers();
       setDrivers(driversData);
-      setActiveEntity(entidad);
       return
     case 'destino':
-      alert('Listar' + entidad);
+      const coordinatesData = await getCoordinates();
+      setCoordinates(coordinatesData);
       return
     case 'asignacion':
       alert('Listar' + entidad);
@@ -100,6 +106,7 @@ function Dashboard() {
 
   function resetList(){
     setDrivers([]);
+    setCoordinates([]);
   }
 
   const renderForm = () => {
@@ -206,21 +213,29 @@ function Dashboard() {
         </div>
 
         <div>
-          <form id="search-form" className='bg-slate-200'>
-            <input type="text" className='placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3  shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' placeholder="Busca aquí..." autoComplete="off"></input>
-            <label className="relative block">
-              <span className="sr-only">Search</span>
-              <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-                <svg className="h-5 w-5 fill-slate-300" viewBox="0 0 20 20"></svg>
-              </span>
-            </label>
-          </form >
+          <SearchForm
+            activeEntity={activeEntity}
+            setters={
+              {conductor: setDrivers, destino:setCoordinates}
+            }
+            setDrivers={setDrivers}
+            setCoordinates={setCoordinates}
+            resetList={resetList}
+        />
+
 
           <div id="resultados" className='items-center justify-center p-4'>
             <ul id="lista-resultados" className="text-left">
               {drivers.length > 0 && (
                 drivers.map((driver) => (
                 <DriverItem key={driver.id} driver={driver}  setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
+              ))
+              )}
+            </ul>
+              <ul id="lista-resultados" className="text-left">
+              {coordinates.length > 0 && (
+                coordinates.map((coordinate) => (
+                <CoordinateItem key={coordinate.id} coordinate={coordinate} openConfirmation={openConfirmation} />
               ))
               )}
             </ul>
@@ -283,8 +298,7 @@ function borrarEntidad(tipo, id) {
       deleteDriver(id);
       return
     case 'destino':
-      alert('Borrar ' + tipo + ' con id: ' + id);
-      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      deleteCoordinate(id);
       return
     case 'asignacion':
       alert('Borrar ' + tipo + ' con id: ' + id);
