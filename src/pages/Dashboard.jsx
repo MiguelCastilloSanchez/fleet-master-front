@@ -215,10 +215,13 @@ function Dashboard() {
         <div>
           <SearchForm
             activeEntity={activeEntity}
+            setters={
+              {conductor: setDrivers, destino:setCoordinates}
+            }
             setDrivers={setDrivers}
             setCoordinates={setCoordinates}
             resetList={resetList}
-          />
+        />
 
 
           <div id="resultados" className='items-center justify-center p-4'>
