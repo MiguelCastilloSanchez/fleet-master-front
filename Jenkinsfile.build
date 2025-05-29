@@ -3,7 +3,6 @@ pipeline {
     parameters {
     string(name: 'FLEET_MASTER_MAIN_URL', defaultValue: '', description: 'URL de la API MAIN para el build')
     string(name: 'FLEET_MASTER_AUTH_URL', defaultValue: '', description: 'URL de la API AUTH para el build')
-    string(name: 'VM_IP', defaultValue: '', description: 'URL de la API AUTH para el build')
     }
     environment {
         FLEET_MASTER_MAIN_URL = "${params.FLEET_MASTER_MAIN_URL}"
@@ -39,7 +38,7 @@ pipeline {
             build(
                 job: 'fleet-master-frontend-deploy',
                 parameters: [
-                    string(name: 'VM_IP', value: '${params.VM_IP}')
+                    string(name: 'VM_IP', value: '128.85.32.202')
                 ],
                 wait: false
             )
