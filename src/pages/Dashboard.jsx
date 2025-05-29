@@ -22,11 +22,12 @@ import RouteItem from '.././components/Routes/RouteItem.jsx'
 
 import UserForm from './Users/UserForm';
 import UserUpdate from './Users/UserUpdate';
+import UserItem from '../components/Users/UserItem.jsx';
 
 import { deleteDriver, getDrivers } from '../services/driverServiceApi.js';
 import { deleteCoordinate, getCoordinates } from '../services/coordinatesServiceApi.js';
 import { deleteRoute, getRoutes } from '../services/routeServiceApi.js';
-
+import { deleteUser, getUsers } from '../services/userServiceApi.js';
 
 import SearchForm from '../components/SearchForm.jsx';
 
@@ -54,6 +55,7 @@ function Dashboard() {
   const [drivers, setDrivers] = useState([]);
   const [coordinates, setCoordinates] = useState([]);
   const [routes, setRoutes] = useState([]);
+  const [users, setUsers] = useState([]);
   const [activeEntity, setActiveEntity] = useState(null);
 
 
@@ -108,7 +110,8 @@ function Dashboard() {
         setRoutes(routesData);
         return
       case 'admin':
-        alert('Listar' + entidad);
+        const usersData = await getUsers();
+        setUsers(usersData);
         return
       default:
         return null;
@@ -119,6 +122,7 @@ function Dashboard() {
     setDrivers([]);
     setCoordinates([]);
     setRoutes([]);
+    setUsers([]);
   }
 
   const renderForm = () => {
@@ -144,7 +148,7 @@ function Dashboard() {
       case 'rutaUpdate':
         return <RouteUpdate routeId={selectedId} />;
       case 'adminUpdate':
-        return <UserUpdate />;
+        return <UserUpdate userId={selectedId}/>;
       default:
         return null;
     }
@@ -264,7 +268,7 @@ function Dashboard() {
           <SearchForm
             activeEntity={activeEntity}
             setters={
-              { conductor: setDrivers, destino: setCoordinates, ruta: setRoutes }
+              { conductor: setDrivers, destino: setCoordinates, ruta: setRoutes, administrador: setUsers }
             }
             resetList={resetList}
           />
@@ -288,6 +292,13 @@ function Dashboard() {
               {routes.length > 0 && (
                 routes.map((route) => (
                   <RouteItem key={route.id} route={route} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
+                ))
+              )}
+            </ul>
+            <ul id="lista-resultados" className="text-left">
+              {users.length > 0 && (
+                users.map((user) => (
+                  <UserItem key={user.id} user={user} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
                 ))
               )}
             </ul>
@@ -354,8 +365,7 @@ function borrarEntidad(tipo, id) {
       deleteRoute(id);
       return
     case 'admin':
-      alert('Borrar ' + tipo + ' con id: ' + id);
-      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      deleteUser(id);
       return
     default:
       return null;
