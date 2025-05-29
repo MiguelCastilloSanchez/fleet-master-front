@@ -16,6 +16,7 @@ import CoordinateItem from '../components/Coordinates/CoordinateItem.jsx';
 
 import AssignmentForm from './Assignment/AssignmentForm';
 import AssignmentUpdate from './Assignment/AssignmentUpdate';
+import AssignmentItem from '../components/Assignments/AssignmentItem.jsx';
 
 import RouteForm from './Routes/RouteForm';
 import RouteUpdate from './Routes/RouteUpdate';
@@ -28,6 +29,7 @@ import UserItem from '../components/Users/UserItem.jsx';
 import { deleteDriver, getDrivers } from '../services/driverServiceApi.js';
 import { deleteVehicle, getVehicles } from '../services/vehicleServiceApi.js';
 import { deleteCoordinate, getCoordinates } from '../services/coordinatesServiceApi.js';
+import { deleteAssignment, getAssignments } from '../services/assignmentServiceApi.js';
 import { deleteRoute, getRoutes } from '../services/routeServiceApi.js';
 import { deleteUser, getUsers } from '../services/userServiceApi.js';
 
@@ -57,6 +59,7 @@ function Dashboard() {
   const [drivers, setDrivers] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [coordinates, setCoordinates] = useState([]);
+  const [assignments, setAssignments] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [users, setUsers] = useState([]);
   const [activeEntity, setActiveEntity] = useState(null);
@@ -107,7 +110,8 @@ function Dashboard() {
         setCoordinates(coordinatesData);
         return
       case 'asignacion':
-        alert('Listar' + entidad);
+        const assignmentsData = await getAssignments();
+        setAssignments(assignmentsData);
         return
       case 'ruta':
         const routesData = await getRoutes();
@@ -126,6 +130,7 @@ function Dashboard() {
     setDrivers([]);
     setVehicles([]);
     setCoordinates([]);
+    setAssignments([]);
     setRoutes([]);
     setUsers([]);
   }
@@ -149,7 +154,7 @@ function Dashboard() {
       case 'conductorUpdate':
         return <DriverUpdate driverId={selectedId} />;
       case 'asignacionUpdate':
-        return <AssignmentUpdate />;
+        return <AssignmentUpdate assignmentId={selectedId} />;
       case 'rutaUpdate':
         return <RouteUpdate routeId={selectedId} />;
       case 'adminUpdate':
@@ -273,7 +278,7 @@ function Dashboard() {
           <SearchForm
             activeEntity={activeEntity}
             setters={
-              { conductor: setDrivers, vehiculo: setVehicles, destino: setCoordinates, ruta: setRoutes, administrador: setUsers }
+              { conductor: setDrivers, vehiculo: setVehicles, destino: setCoordinates, asignacion: setAssignments, ruta: setRoutes, administrador: setUsers }
             }
             resetList={resetList}
           />
@@ -297,6 +302,13 @@ function Dashboard() {
               {coordinates.length > 0 && (
                 coordinates.map((coordinate) => (
                   <CoordinateItem key={coordinate.id} coordinate={coordinate} openConfirmation={openConfirmation} />
+                ))
+              )}
+            </ul>
+            <ul id="lista-resultados" className="text-left">
+              {assignments.length > 0 && (
+                assignments.map((assignment) => (
+                  <AssignmentItem key={assignment.id} assignment={assignment} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
                 ))
               )}
             </ul>
@@ -369,8 +381,7 @@ function borrarEntidad(tipo, id) {
       deleteCoordinate(id);
       return
     case 'asignacion':
-      alert('Borrar ' + tipo + ' con id: ' + id);
-      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      deleteAssignment(id);
       return
     case 'ruta':
       deleteRoute(id);
