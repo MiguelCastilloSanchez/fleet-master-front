@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import '../styles/Dashboard.css';
 import Modal from './ModalForm';
@@ -22,16 +22,25 @@ import RouteItem from '.././components/Routes/RouteItem.jsx'
 
 import UserForm from './Users/UserForm';
 import UserUpdate from './Users/UserUpdate';
+import UserItem from '../components/Users/UserItem.jsx';
 
 import { deleteDriver, getDrivers } from '../services/driverServiceApi.js';
 import { deleteCoordinate, getCoordinates } from '../services/coordinatesServiceApi.js';
 import { deleteRoute, getRoutes } from '../services/routeServiceApi.js';
-
+import { deleteUser, getUsers } from '../services/userServiceApi.js';
 
 import SearchForm from '../components/SearchForm.jsx';
 
 
 function Dashboard() {
+  const [todayUsers, setTodayUsers] = useState(0);
+  const [todayRoutes, setTodayRoutes] = useState(0);
+  const [todayVehicles, setTodayVehicles] = useState(0);
+  const [todayDrivers, setTodayDrivers] = useState(0);
+
+  useEffect(() => {
+    fetchSummaryData();
+  }, []);
 
   const entities = [
     { name: 'Conductores', label: 'Crear conductor', value: 'conductor' },
@@ -46,6 +55,7 @@ function Dashboard() {
   const [drivers, setDrivers] = useState([]);
   const [coordinates, setCoordinates] = useState([]);
   const [routes, setRoutes] = useState([]);
+  const [users, setUsers] = useState([]);
   const [activeEntity, setActiveEntity] = useState(null);
 
 
@@ -57,9 +67,9 @@ function Dashboard() {
 
   const [selectedId, setSelectedId] = useState(null);
   const handleSetActiveForm = (formType, id = null) => {
-  setActiveForm(formType);
-  setSelectedId(id);
-};
+    setActiveForm(formType);
+    setSelectedId(id);
+  };
 
   const openConfirmation = (tipo, id) => {
     setConfirmationModal({ abierto: true, tipo, id });
@@ -80,37 +90,39 @@ function Dashboard() {
   async function listarEntidades(entidad) {
     resetList();
     setActiveEntity(entidad);
-  switch (entidad) {
-    case 'vehiculo':
-      alert('Listar' + entidad);
-      return
-    case 'conductor':
-      const driversData = await getDrivers();
-      setDrivers(driversData);
-      return
-    case 'destino':
-      const coordinatesData = await getCoordinates();
-      setCoordinates(coordinatesData);
-      return
-    case 'asignacion':
-      alert('Listar' + entidad);
-      return
-    case 'ruta':
-      const routesData = await getRoutes();
-      setRoutes(routesData);
-      return
-    case 'admin':
-      alert('Listar' + entidad);
-      return
-    default:
-      return null;
+    switch (entidad) {
+      case 'vehiculo':
+        alert('Listar' + entidad);
+        return
+      case 'conductor':
+        const driversData = await getDrivers();
+        setDrivers(driversData);
+        return
+      case 'destino':
+        const coordinatesData = await getCoordinates();
+        setCoordinates(coordinatesData);
+        return
+      case 'asignacion':
+        alert('Listar' + entidad);
+        return
+      case 'ruta':
+        const routesData = await getRoutes();
+        setRoutes(routesData);
+        return
+      case 'admin':
+        const usersData = await getUsers();
+        setUsers(usersData);
+        return
+      default:
+        return null;
+    }
   }
-}
 
-  function resetList(){
+  function resetList() {
     setDrivers([]);
     setCoordinates([]);
     setRoutes([]);
+    setUsers([]);
   }
 
   const renderForm = () => {
@@ -130,17 +142,55 @@ function Dashboard() {
       case 'vehiculoUpdate':
         return <VehicleUpdate />;
       case 'conductorUpdate':
-        return <DriverUpdate driverId={selectedId}/>;
+        return <DriverUpdate driverId={selectedId} />;
       case 'asignacionUpdate':
         return <AssignmentUpdate />;
       case 'rutaUpdate':
-        return <RouteUpdate routeId={selectedId}/>;
+        return <RouteUpdate routeId={selectedId} />;
       case 'adminUpdate':
-        return <UserUpdate />;
+        return <UserUpdate userId={selectedId}/>;
       default:
         return null;
     }
   };
+
+  async function fetchSummaryData() {
+    try {
+      const [driversData, routesData, vehiclesData] = await Promise.all([
+        getDrivers(),
+        getRoutes(),
+        1//getVehicles()
+      ]);
+
+      const today = new Date().toLocaleDateString('en-CA');
+      console.log("todayLocal fecha: " + today);
+
+      const driversCreatedToday = driversData.filter(driver => {
+        return driver.systemEntryDate === today;
+      });
+
+      const routesCreatedToday = routesData.filter(route => {
+        console.log("Ruta fecha: " + route.createdDate);
+        return route.createdDate === today;
+      });
+
+      /*
+      // Vehículos registrados hoy
+      const vehiclesRegisteredToday = vehiclesData.filter(vehicle => {
+        console.log("Vehículo fecha: " + vehicle.registrationDate);
+        return vehicle.registrationDate === today;
+      });
+      setTodayVehicles(vehiclesRegisteredToday.length);
+      */
+
+      setTodayRoutes(routesCreatedToday.length);
+      setTodayDrivers(driversCreatedToday.length);
+
+
+    } catch (error) {
+      console.error("Error al obtener los datos:", error);
+    }
+  }
 
   return (
     <>
@@ -187,10 +237,10 @@ function Dashboard() {
 
       <div className="p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          <Card title="Usuarios creados" count={10} />
-          <Card title="Viajes del día" count={5} />
-          <Card title="Vehículos creados" count={7} />
-          <Card title="Conductores creados" count={3} />
+          <Card title="Usuarios creados" count={todayUsers} />
+          <Card title="Viajes del día" count={todayRoutes} />
+          <Card title="Vehículos creados" count={todayVehicles} />
+          <Card title="Conductores creados" count={todayDrivers} />
         </div>
       </div>
 
@@ -218,32 +268,38 @@ function Dashboard() {
           <SearchForm
             activeEntity={activeEntity}
             setters={
-              {conductor: setDrivers, destino:setCoordinates, ruta: setRoutes}
+              { conductor: setDrivers, destino: setCoordinates, ruta: setRoutes, administrador: setUsers }
             }
             resetList={resetList}
-        />
-
+          />
 
           <div id="resultados" className='items-center justify-center p-4'>
             <ul id="lista-resultados" className="text-left">
               {drivers.length > 0 && (
                 drivers.map((driver) => (
-                <DriverItem key={driver.id} driver={driver}  setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
-              ))
+                  <DriverItem key={driver.id} driver={driver} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
+                ))
               )}
             </ul>
-              <ul id="lista-resultados" className="text-left">
+            <ul id="lista-resultados" className="text-left">
               {coordinates.length > 0 && (
                 coordinates.map((coordinate) => (
-                <CoordinateItem key={coordinate.id} coordinate={coordinate} openConfirmation={openConfirmation} />
-              ))
+                  <CoordinateItem key={coordinate.id} coordinate={coordinate} openConfirmation={openConfirmation} />
+                ))
               )}
             </ul>
             <ul id="lista-resultados" className="text-left">
               {routes.length > 0 && (
                 routes.map((route) => (
-                <RouteItem key={route.id} route={route}  setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
-              ))
+                  <RouteItem key={route.id} route={route} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
+                ))
+              )}
+            </ul>
+            <ul id="lista-resultados" className="text-left">
+              {users.length > 0 && (
+                users.map((user) => (
+                  <UserItem key={user.id} user={user} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
+                ))
               )}
             </ul>
           </div>
@@ -274,9 +330,6 @@ function Dashboard() {
     </>
   );
 
-  
-
-
 }
 
 function Card({ title, count }) {
@@ -286,13 +339,11 @@ function Card({ title, count }) {
         <h2 className="text-lg font-semibold">{title}</h2>
         <p className="text-2xl">{count}</p>
       </button>
-
     </>
   );
 }
 
 export default Dashboard;
-
 
 function borrarEntidad(tipo, id) {
   switch (tipo) {
@@ -314,8 +365,7 @@ function borrarEntidad(tipo, id) {
       deleteRoute(id);
       return
     case 'admin':
-      alert('Borrar ' + tipo + ' con id: ' + id);
-      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      deleteUser(id);
       return
     default:
       return null;
