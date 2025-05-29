@@ -1,16 +1,20 @@
 const apiUrl = import.meta.env.VITE_API_URL;
-
+const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+console.log('Class: routeServiceApi');
+console.log('Auth Token:', authToken);
 
 export async function createRoute(routeData) {
   const response = await fetch(`${apiUrl}/route`, {
     method: 'POST',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
     body: JSON.stringify({
       ...routeData,
     }),
+    credentials: 'include'
   });
 
   if (!response.ok) {
@@ -25,7 +29,8 @@ export async function getRoutes() {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
   });
 
@@ -40,7 +45,8 @@ export async function updateRoute(routeData) {
     method: "PUT",
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
     body: JSON.stringify({
       ...routeData,
@@ -58,7 +64,8 @@ export async function getRouteById(id) {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
   });
 
@@ -73,7 +80,8 @@ export async function deleteRoute(id) {
     method: 'DELETE',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
   });
 }

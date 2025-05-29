@@ -22,6 +22,7 @@ useEffect(() => {
       setCoordinates(coords);
       setAssignments(assigns);
     } catch (err) {
+    alert('Error cargando datos');
       console.error('Error cargando datos:', err);
     }
   }

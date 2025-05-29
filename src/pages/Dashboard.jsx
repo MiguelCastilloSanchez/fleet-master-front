@@ -37,6 +37,11 @@ import SearchForm from '../components/SearchForm.jsx';
 
 
 function Dashboard() {
+  const authToken = localStorage.getItem('authToken');
+  if (!authToken) {
+    return <div className="text-red-500">No tienes permiso para acceder a esta página.</div>;
+  }
+
   const [todayUsers, setTodayUsers] = useState(0);
   const [todayRoutes, setTodayRoutes] = useState(0);
   const [todayVehicles, setTodayVehicles] = useState(0);
@@ -110,12 +115,12 @@ function Dashboard() {
         setCoordinates(coordinatesData);
         return
       case 'asignacion':
-        try{ 
-           listarAsignaciones(active, driverId, vehicleId);
-          }catch(err){
-            return
-          }
-        
+        try {
+          listarAsignaciones(active, driverId, vehicleId);
+        } catch (err) {
+          return
+        }
+
         return
       case 'ruta':
         const routesData = await getRoutes();
@@ -130,27 +135,27 @@ function Dashboard() {
     }
   }
 
-    async function listarAsignaciones(active, driverId, vehicleId){
-      let assignmentData
-      if (active){
-        if (driverId){
-          assignmentData = await getActiveAssignmentsByDriver(driverId);
-        }else if (vehicleId){
-          assignmentData = await getActiveAssignmentsByVehicle(vehicleId);
-        }
-      setAssignments([assignmentData]);
-      }else{
-        if (driverId){
-          assignmentData = await getDriverAssignmentHistory(driverId);
-        } else if(vehicleId){
-          assignmentData = await getVehicleAssignmentHistory(vehicleId);
-
-        }else{
-          assignmentData = await getAssignments();
-        }
-        setAssignments(assignmentData);
+  async function listarAsignaciones(active, driverId, vehicleId) {
+    let assignmentData
+    if (active) {
+      if (driverId) {
+        assignmentData = await getActiveAssignmentsByDriver(driverId);
+      } else if (vehicleId) {
+        assignmentData = await getActiveAssignmentsByVehicle(vehicleId);
       }
+      setAssignments([assignmentData]);
+    } else {
+      if (driverId) {
+        assignmentData = await getDriverAssignmentHistory(driverId);
+      } else if (vehicleId) {
+        assignmentData = await getVehicleAssignmentHistory(vehicleId);
+
+      } else {
+        assignmentData = await getAssignments();
+      }
+      setAssignments(assignmentData);
     }
+  }
 
   function resetList() {
     setDrivers([]);

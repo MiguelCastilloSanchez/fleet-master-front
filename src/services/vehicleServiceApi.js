@@ -1,12 +1,19 @@
 const apiUrl = import.meta.env.VITE_API_URL;
+const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+console.log('Class: VehicleServiceApi');
+console.log('Auth Token:', authToken);
 
 export async function createVehicle(vehicleData) {
   const response = await fetch(`${apiUrl}/vehicle`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
     body: JSON.stringify({
       ...vehicleData,
     }),
+    credentials: 'include'
   });
 
   if (!response.ok) {
@@ -19,6 +26,10 @@ export async function createVehicle(vehicleData) {
 export async function getVehicles() {
   const response = await fetch(`${apiUrl}/vehicle`, {
     method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
   });
 
   if (!response.ok) {
@@ -31,6 +42,10 @@ export async function getVehicles() {
 export async function getVehicleById(id) {
   const response = await fetch(`${apiUrl}/vehicle/${id}`, {
     method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
   });
 
   if (!response.ok) {
@@ -43,7 +58,10 @@ export async function getVehicleById(id) {
 export async function updateVehicle(vehicleData) {
   const response = await fetch(`${apiUrl}/vehicle/${vehicleData.id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
     body: JSON.stringify({
       ...vehicleData,
     }),
@@ -59,6 +77,10 @@ export async function updateVehicle(vehicleData) {
 export async function deleteVehicle(id) {
   const response = await fetch(`${apiUrl}/vehicle/${id}`, {
     method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
   });
 
   if (!response.ok) {
