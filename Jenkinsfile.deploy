@@ -35,7 +35,7 @@ pipeline {
   }
   post{
     success{
-      sh 'echo Deployment completado accede a la ${VM_IP} para acceder al sistema'
+      sh 'echo Deployment completado accede a la ${params.VM_IP} para acceder al sistema'
     }
   }
 }
