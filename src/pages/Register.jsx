@@ -21,11 +21,11 @@ function Register() {
         try {
             const result = await createAdmin(formState);
             alert('Usuario creado con éxito');
+            window.location.href = "/login";
         } catch (err) {
             alert('Hubo un error al crear el administrador');
             console.error(err);
         }
-        //window.location.href = "/login";
     };
 
 
