@@ -205,8 +205,7 @@ function Dashboard() {
       ]);
 
       const today = new Date().toLocaleDateString('en-CA');
-      console.log("todayLocal fecha: " + today);
-
+      
       /*
       Usuarios creados hoy
       const usersCreatedToday = usersData.filter(user => {
@@ -219,12 +218,10 @@ function Dashboard() {
       });
 
       const routesCreatedToday = routesData.filter(route => {
-        console.log("Ruta fecha: " + route.createdDate);
         return route.createdDate === today;
       });
 
       const vehiclesRegisteredToday = vehiclesData.filter(vehicle => {
-        console.log("Vehículo fecha: " + vehicle.registrationDate);
         return vehicle.registrationDate === today;
       });
 
