@@ -1,10 +1,12 @@
 import { act, useState } from 'react';
 import { getDriverById } from '../services/driverServiceApi';
 import { getCoordinateById } from '../services/coordinatesServiceApi';
+import { getRouteById } from '../services/routeServiceApi';
 
 const services = {
   getConductorById: getDriverById,
   getDestinoById: getCoordinateById,
+  getRutaById: getRouteById,
 };
 
 export default function SearchForm({ activeEntity, setters, resetList }) {
