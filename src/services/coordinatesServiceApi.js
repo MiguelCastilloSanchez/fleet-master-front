@@ -1,18 +1,22 @@
 const apiUrl = import.meta.env.VITE_API_URL;
-
+const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+console.log('Class: CoordinatesServiceApi');
+console.log('Auth Token:', authToken);
 
 export async function createCoordinate(coordinateData) {
   const response = await fetch(`${apiUrl}/coordinate`, {
     method: 'POST',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
     body: JSON.stringify({
       ...coordinateData,
       latitude: parseFloat(coordinateData.latitude),
       longitude: parseFloat(coordinateData.longitude),
     }),
+    credentials: 'include'
   });
 
   if (!response.ok) {
@@ -27,7 +31,8 @@ export async function getCoordinates() {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     }
 
   });
@@ -44,7 +49,8 @@ export async function updateCoordinate(coordinateData) {
     headers: { 'Content-Type': 'application/json' },
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
     body: JSON.stringify({
       ...coordinateData,
@@ -62,7 +68,8 @@ export async function getCoordinateById(id) {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
   });
 
@@ -77,7 +84,8 @@ export async function deleteCoordinate(id) {
     method: 'DELETE',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
   });
 }

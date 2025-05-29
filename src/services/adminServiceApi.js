@@ -1,5 +1,8 @@
 const apiUrl = import.meta.env.VITE_API_URL;
 const apiAuthUrl = import.meta.env.VITE_API_AUTH_URL;
+const authToken = localStorage.getItem('authToken');
+console.log('Class: adminServiceApi');
+console.log('Auth Token:', authToken);
 
 export async function createAdmin(adminData) {
   var body_test = JSON.stringify({
@@ -13,9 +16,11 @@ export async function createAdmin(adminData) {
   const response = await fetch(`${apiAuthUrl}/admin`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
-    body: body_test
+    body: body_test,
+    credentials: 'include'
   });
 
   if (!response.ok) {
@@ -34,7 +39,8 @@ export async function loginAdmin(adminData) {
   const response = await fetch(`${apiAuthUrl}/login`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
     body: body_test
   });

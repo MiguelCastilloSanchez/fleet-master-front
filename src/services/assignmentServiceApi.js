@@ -1,12 +1,17 @@
 const apiUrl = import.meta.env.VITE_API_URL;
+const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+console.log('Class: assignmentServiceApi');
+console.log('Auth Token:', authToken);
 
 export async function getAssignments() {
   const response = await fetch(`${apiUrl}/assignment`, {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
+    credentials: 'include'
   });
 
   if (!response.ok) {
@@ -20,7 +25,8 @@ export async function getAssignmentHistory() {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     }
   });
 
@@ -35,7 +41,8 @@ export async function getAssignmentById(id) {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     }
   });
 
@@ -49,7 +56,8 @@ export async function createAssignment(assignmentData) {
   const response = await fetch(`${apiUrl}/assignment`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
     body: JSON.stringify({
       ...assignmentData
@@ -66,7 +74,8 @@ export async function updateAssignment(assignmentData) {
   const response = await fetch(`${apiUrl}/assignment/${assignmentData.assignmentId}`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
     body: JSON.stringify({
       ...assignmentData
@@ -95,7 +104,8 @@ export async function getActiveAssignmentsByDriver(driverId) {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     }
   });
 
@@ -110,7 +120,8 @@ export async function getDriverAssignmentHistory(driverId) {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     }
   });
 
@@ -125,7 +136,8 @@ export async function getActiveAssignmentsByVehicle(vehicleId) {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     }
   });
 
@@ -140,7 +152,8 @@ export async function getVehicleAssignmentHistory(vehicleId) {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     }
   });
 

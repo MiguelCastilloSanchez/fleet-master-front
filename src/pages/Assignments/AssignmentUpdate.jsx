@@ -19,6 +19,7 @@ export default function AssignmentUpdate({ onSuccess, assignmentId }) {
         setDrivers(drvList);
         setVehicles(vehList);
       } catch (err) {
+        alert('Error cargando conductores o vehículos');
         console.error('Error cargando conductores o vehículos:', err);
       }
     }
@@ -35,6 +36,7 @@ export default function AssignmentUpdate({ onSuccess, assignmentId }) {
           vehicleId: assignment.vehicleId || '',
         });
       } catch (err) {
+        alert('Error al cargar datos de la asignación');
         console.error('Error al cargar datos de la asignación:', err);
       }
     }

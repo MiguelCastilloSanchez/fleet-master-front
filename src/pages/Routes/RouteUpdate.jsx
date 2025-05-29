@@ -29,6 +29,7 @@ export default function RouteForm({ onSuccess, routeId }) {
           endLocationId: routeResult.endLocationId,
         });
       } catch (err) {
+        alert('Error al cargar datos de la ruta');
         console.error('Error al cargar datos de la ruta:', err);
       }
     };
@@ -44,6 +45,7 @@ export default function RouteForm({ onSuccess, routeId }) {
         const coords = await getCoordinates();
         setCoordinates(coords);
       } catch (err) {
+        alert('Error al obtener coordenadas');
         console.error('Error al obtener coordenadas:', err);
       }
     };

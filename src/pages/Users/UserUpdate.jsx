@@ -22,6 +22,7 @@ export default function UserUpdate({ onSuccess, userId }) {
           code: user.code || '',
         });
       } catch (err) {
+        alert('Error al cargar datos del usuario');
         console.error('Error al cargar datos del usuario:', err);
       }
     }

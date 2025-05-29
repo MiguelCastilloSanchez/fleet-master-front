@@ -24,6 +24,7 @@ export default function VehicleUpdate({ onSuccess, vehicleId }) {
           photoUrl: vehicle.photoUrl || '',
         });
       } catch (err) {
+        alert('Error al cargar datos del vehículo');
         console.error('Error al cargar datos del vehículo:', err);
       }
     }

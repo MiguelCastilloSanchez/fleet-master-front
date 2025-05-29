@@ -18,6 +18,7 @@ export default function DriverForm({ onSuccess, driverId }) {
           salary: driverResult.salary
         });
       } catch (err) {
+        alert('Error al cargar datos del conductor');
         console.error('Error al cargar datos del conductor:', err);
       }
     };

@@ -1,17 +1,21 @@
 const apiUrl = import.meta.env.VITE_API_URL;
-
+const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+console.log('Class: driverServiceApi');
+console.log('Auth Token:', authToken);
 
 export async function createDriver(driverData) {
   const response = await fetch(`${apiUrl}/driver`, {
     method: 'POST',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
     body: JSON.stringify({
       ...driverData,
       salary: parseFloat(driverData.salary),
     }),
+    credentials: 'include'
   });
 
   if (!response.ok) {
@@ -26,7 +30,8 @@ export async function getDrivers() {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     }
   });
 
@@ -41,7 +46,8 @@ export async function updateDriver(driverData) {
     method: "PUT",
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
     body: JSON.stringify({
       ...driverData,
@@ -59,7 +65,8 @@ export async function getDriverById(id) {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     },
   });
 
