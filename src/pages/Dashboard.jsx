@@ -18,13 +18,14 @@ import AssignmentUpdate from './Assignment/AssignmentUpdate';
 
 import RouteForm from './Routes/RouteForm';
 import RouteUpdate from './Routes/RouteUpdate';
+import RouteItem from '.././components/Routes/RouteItem.jsx'
 
 import UserForm from './Users/UserForm';
 import UserUpdate from './Users/UserUpdate';
 
-import { getDrivers } from '../services/driverServiceApi.js'; 
-import { deleteDriver } from '../services/driverServiceApi.js';
+import { deleteDriver, getDrivers } from '../services/driverServiceApi.js';
 import { deleteCoordinate, getCoordinates } from '../services/coordinatesServiceApi.js';
+import { deleteRoute, getRoutes } from '../services/routeServiceApi.js';
 
 
 import SearchForm from '../components/SearchForm.jsx';
@@ -36,7 +37,7 @@ function Dashboard() {
     { name: 'Conductores', label: 'Crear conductor', value: 'conductor' },
     { name: 'Vehículos', label: 'Crear vehículo', value: 'vehiculo' },
     { name: 'Destinos', label: 'Crear destino', value: 'destino' },
-    { name: 'Asingaciones', label: 'Crear asignación', value: 'asignacion' },
+    { name: 'Asignaciones', label: 'Crear asignación', value: 'asignacion' },
     { name: 'Rutas', label: 'Crear ruta', value: 'ruta' },
     { name: 'Administradores', label: 'Opciones de administrador', value: 'admin' },
   ];
@@ -44,6 +45,7 @@ function Dashboard() {
   const [activeForm, setActiveForm] = useState(null);
   const [drivers, setDrivers] = useState([]);
   const [coordinates, setCoordinates] = useState([]);
+  const [routes, setRoutes] = useState([]);
   const [activeEntity, setActiveEntity] = useState(null);
 
 
@@ -94,7 +96,8 @@ function Dashboard() {
       alert('Listar' + entidad);
       return
     case 'ruta':
-      alert('Listar' + entidad);
+      const routesData = await getRoutes();
+      setRoutes(routesData);
       return
     case 'admin':
       alert('Listar' + entidad);
@@ -107,6 +110,7 @@ function Dashboard() {
   function resetList(){
     setDrivers([]);
     setCoordinates([]);
+    setRoutes([]);
   }
 
   const renderForm = () => {
@@ -127,12 +131,10 @@ function Dashboard() {
         return <VehicleUpdate />;
       case 'conductorUpdate':
         return <DriverUpdate driverId={selectedId}/>;
-      case 'destinoUpdate':
-        return <CoordinateUpdate />;
       case 'asignacionUpdate':
         return <AssignmentUpdate />;
       case 'rutaUpdate':
-        return <RouteUpdate />;
+        return <RouteUpdate routeId={selectedId}/>;
       case 'adminUpdate':
         return <UserUpdate />;
       default:
@@ -216,10 +218,8 @@ function Dashboard() {
           <SearchForm
             activeEntity={activeEntity}
             setters={
-              {conductor: setDrivers, destino:setCoordinates}
+              {conductor: setDrivers, destino:setCoordinates, ruta: setRoutes}
             }
-            setDrivers={setDrivers}
-            setCoordinates={setCoordinates}
             resetList={resetList}
         />
 
@@ -239,7 +239,13 @@ function Dashboard() {
               ))
               )}
             </ul>
-
+            <ul id="lista-resultados" className="text-left">
+              {routes.length > 0 && (
+                routes.map((route) => (
+                <RouteItem key={route.id} route={route}  setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
+              ))
+              )}
+            </ul>
           </div>
         </div>
 
@@ -305,8 +311,7 @@ function borrarEntidad(tipo, id) {
       console.log(`Eliminar ${tipo} con ID: ${id}`);
       return
     case 'ruta':
-      alert('Borrar ' + tipo + ' con id: ' + id);
-      console.log(`Eliminar ${tipo} con ID: ${id}`);
+      deleteRoute(id);
       return
     case 'admin':
       alert('Borrar ' + tipo + ' con id: ' + id);

@@ -8,7 +8,6 @@ export default function DriverForm({ onSuccess, driverId }) {
     salary: ''
   });
 
-  // ✅ Carga los datos cuando el componente monta o driverId cambia
   useEffect(() => {
     const fetchDriver = async () => {
       try {
