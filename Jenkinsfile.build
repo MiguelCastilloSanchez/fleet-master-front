@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    parameters {
+    string(name: 'FLEET_MASTER_MAIN_URL', defaultValue: '', description: 'URL de la API MAIN para el build')
+    string(name: 'FLEET_MASTER_AUTH_URL', defaultValue: '', description: 'URL de la API AUTH para el build')
+    }
+    environment {
+        FLEET_MASTER_MAIN_URL = "${params.FLEET_MASTER_MAIN_URL}"
+        FLEET_MASTER_AUTH_URL = "${params.FLEET_MASTER_AUTH_URL}"
+    }
+    stages {
+        stage('Prepare .env') {
+            steps {
+                // Reemplaza la línea VITE_API_URL=... con el valor real
+                sh """
+                    sed -i 's|VITE_API_MAIN_URL=.*|VITE_API_MAIN_URL=${FLEET_MASTER_MAIN_URL}|' .env
+                    sed -i 's|VITE_API_AUTH_URL=.*|VITE_API_AUTH_URL=${FLEET_MASTER_AUTH_URL}|' .env
+                    echo "Contenido de .env actualizado:"
+                    cat .env
+                """
+            }
+        }
+        stage('Install dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+                sh 'tar czf dist.tar.gz dist'
+            }
+        }
+    }
+    post {
+        success {
+            archiveArtifacts artifacts: 'dist.tar.gz', fingerprint: true
+            build(
+                job: 'frontend-deploy-test',
+                parameters: [
+                    string(name: 'VM_IP', value: '172.174.81.81')
+                ],
+                wait: false
+            )
+        }
+    }
+}
