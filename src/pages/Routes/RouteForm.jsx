@@ -56,7 +56,7 @@ useEffect(() => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <label className="flex flex-col">Nombre<input name="name"value={formState.name} onChange={handleChange} placeholder="Nombre" required className="border p-2 rounded" /></label>
+      <label className="flex flex-col">Nombre<input name="name" value={formState.name} onChange={handleChange} placeholder="Nombre" required className="border p-2 rounded" /></label>
       <label className="flex flex-col">Fecha de viaje<input type="date" name="travelDate" value={formState.travelDate} onChange={handleChange} placeholder="Fecha de viaje" required className="border p-2 rounded" /></label>
       <label className="flex flex-col">Identificador de destino
         <select
