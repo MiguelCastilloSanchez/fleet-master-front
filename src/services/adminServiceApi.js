@@ -24,3 +24,24 @@ export async function createAdmin(adminData) {
 
   return response.json();
 }
+
+export async function loginAdmin(adminData) {
+  var body_test = JSON.stringify({
+    username: adminData.username,
+    password: adminData.password
+  });
+  console.log("body_test Data: %o", body_test);
+  const response = await fetch(`${apiAuthUrl}/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: body_test
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al iniciar sesión');
+  }
+
+  return response.json();
+}

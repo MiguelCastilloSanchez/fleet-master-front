@@ -1,20 +1,35 @@
 import { useState } from "react";
+import { loginAdmin } from "../services/adminServiceApi.js";
 
-function Login({ setAuth }) {
-    const [form, setForm] = useState({ email: "", password: "" });
+function Login() {
+    const [formState, setFormState] = useState({
+        username: '',
+        password: '',
+    });
+
+    const handleChange = (e) => {
+        setFormState({ ...formState, [e.target.name]: e.target.value });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        window.location.href = "/dashboard";
-        //Manejar lógica de autenticación
+        try {
+            const result = await loginAdmin(formState);
+            const token = result.token;
+            localStorage.setItem("authToken", token);
+            window.location.href = "/dashboard";
+        } catch (err) {
+            alert('Hubo un error al logear al administrador');
+            console.error(err);
+        }
     };
 
     return (
         <div className="w-full max-w-md p-6 bg-gray-50 rounded shadow ">
             <h1 className="text-2xl font-bold mb-4">Iniciar sesión</h1>
             <form onSubmit={handleSubmit} className="p-4 max-w-md mx-auto">
-                <input className="border w-full mb-2 p-2 dark:text-white" placeholder="Email" onChange={(e) => setForm({ ...form, email: e.target.value })} />
-                <input className="border w-full mb-2 p-2 dark:text-white" placeholder="Password" type="password" onChange={(e) => setForm({ ...form, password: e.target.value })} />
+                <input className="border w-full mb-2 p-2 text-white" placeholder="Username" name="username" value={formState.username} onChange={handleChange} />
+                <input className="border w-full mb-2 p-2 text-white" placeholder="Password" name="password" value={formState.password} type="password" onChange={handleChange} />
                 <button className="bg-blue-600 text-white w-full py-2">Ingresar</button>
             </form>
             <div className="flex items-center gap-4 rounded-lg bg-white p-6 shadow-md outline outline-black/5 dark:bg-gray-800">
