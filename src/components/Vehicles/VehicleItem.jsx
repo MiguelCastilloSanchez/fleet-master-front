@@ -1,6 +1,6 @@
 import React from 'react';
 
-function VehicleItem({ vehicle, setActiveForm, openConfirmation }) {
+function VehicleItem({ vehicle, setActiveForm, openConfirmation, listarEntidades }) {
   return (
     <li className="mb-4 p-4 bg-white rounded-lg shadow">
       <h4 className="font-bold">ID: {vehicle.id}</h4>
@@ -21,6 +21,21 @@ function VehicleItem({ vehicle, setActiveForm, openConfirmation }) {
       >
         Editar
       </button>
+
+      <button
+       onClick={() => listarEntidades('asignacion', true, null, vehicle.id)} 
+       className="bg-orange-500 text-white px-2 py-2 rounded mx-3"
+      >
+        Asignación activa
+      </button>
+
+      <button
+       onClick={() => listarEntidades('asignacion', false, null, vehicle.id)} 
+       className="bg-orange-500 text-white px-2 py-2 rounded mx-3"
+      >
+        Historial de asignaciones
+      </button>
+
       <button
         onClick={() => openConfirmation('vehiculo', vehicle.id)}
         className="text-red-600 hover:underline mx-3"

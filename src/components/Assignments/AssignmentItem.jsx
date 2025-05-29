@@ -8,8 +8,9 @@ function AssignmentItem({ assignment, setActiveForm, openConfirmation }) {
       <p>ID Vehículo: {assignment.vehicleId}</p>
       <p>Fecha de inicio: {assignment.startDate}</p>
       {assignment.endDate && <p>Fecha de fin: {assignment.endDate}</p>}
+      {assignment.active == true ?  <p>Activo</p>: <p>Inactivo</p>}
 
-      <button
+      {assignment.active &&  <><button
         onClick={() => setActiveForm('asignacionUpdate', assignment.id)}
         className="bg-blue-500 text-white px-4 py-2 rounded mx-3"
       >
@@ -20,7 +21,7 @@ function AssignmentItem({ assignment, setActiveForm, openConfirmation }) {
         className="text-red-600 hover:underline mx-3"
       >
         Eliminar
-      </button>
+      </button> </>}
     </li>
   );
 }

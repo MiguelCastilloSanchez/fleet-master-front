@@ -8,7 +8,6 @@ export default function AssignmentUpdate({ onSuccess, assignmentId }) {
     assignmentId: assignmentId,
     driverId: '',
     vehicleId: '',
-    startDate: '',
   });
   const [drivers, setDrivers] = useState([]);
   const [vehicles, setVehicles] = useState([]);
@@ -34,7 +33,6 @@ export default function AssignmentUpdate({ onSuccess, assignmentId }) {
           assignmentId: assignment.id,
           driverId: assignment.driverId || '',
           vehicleId: assignment.vehicleId || '',
-          startDate: assignment.startDate || '',
         });
       } catch (err) {
         console.error('Error al cargar datos de la asignación:', err);
@@ -94,18 +92,6 @@ export default function AssignmentUpdate({ onSuccess, assignmentId }) {
             <option key={v.id} value={v.id}>{`${v.id} - ${v.plate}`}</option>
           ))}
         </select>
-      </label>
-
-      <label className="flex flex-col">
-        Fecha de inicio
-        <input
-          type="date"
-          name="startDate"
-          value={formState.startDate}
-          onChange={handleChange}
-          required
-          className="border p-2 rounded"
-        />
       </label>
 
       <div className="flex justify-end gap-2">

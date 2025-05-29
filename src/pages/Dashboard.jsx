@@ -29,7 +29,7 @@ import UserItem from '../components/Users/UserItem.jsx';
 import { deleteDriver, getDrivers } from '../services/driverServiceApi.js';
 import { deleteVehicle, getVehicles } from '../services/vehicleServiceApi.js';
 import { deleteCoordinate, getCoordinates } from '../services/coordinatesServiceApi.js';
-import { deleteAssignment, getAssignments } from '../services/assignmentServiceApi.js';
+import { deleteAssignment, getActiveAssignmentsByDriver, getActiveAssignmentsByVehicle, getAssignmentHistory, getAssignments, getDriverAssignmentHistory, getVehicleAssignmentHistory } from '../services/assignmentServiceApi.js';
 import { deleteRoute, getRoutes } from '../services/routeServiceApi.js';
 import { deleteUser, getUsers } from '../services/userServiceApi.js';
 
@@ -93,7 +93,7 @@ function Dashboard() {
     setConfirmationModal({ abierto: false, tipo: '', id: null });
   };
 
-  async function listarEntidades(entidad) {
+  async function listarEntidades(entidad, active, driverId, vehicleId) {
     resetList();
     setActiveEntity(entidad);
     switch (entidad) {
@@ -110,8 +110,12 @@ function Dashboard() {
         setCoordinates(coordinatesData);
         return
       case 'asignacion':
-        const assignmentsData = await getAssignments();
-        setAssignments(assignmentsData);
+        try{ 
+           listarAsignaciones(active, driverId, vehicleId);
+          }catch(err){
+            return
+          }
+        
         return
       case 'ruta':
         const routesData = await getRoutes();
@@ -125,6 +129,28 @@ function Dashboard() {
         return null;
     }
   }
+
+    async function listarAsignaciones(active, driverId, vehicleId){
+      let assignmentData
+      if (active){
+        if (driverId){
+          assignmentData = await getActiveAssignmentsByDriver(driverId);
+        }else if (vehicleId){
+          assignmentData = await getActiveAssignmentsByVehicle(vehicleId);
+        }
+      setAssignments([assignmentData]);
+      }else{
+        if (driverId){
+          assignmentData = await getDriverAssignmentHistory(driverId);
+        } else if(vehicleId){
+          assignmentData = await getVehicleAssignmentHistory(vehicleId);
+
+        }else{
+          assignmentData = await getAssignments();
+        }
+        setAssignments(assignmentData);
+      }
+    }
 
   function resetList() {
     setDrivers([]);
@@ -293,14 +319,14 @@ function Dashboard() {
             <ul id="lista-resultados" className="text-left">
               {drivers.length > 0 && (
                 drivers.map((driver) => (
-                  <DriverItem key={driver.id} driver={driver} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
+                  <DriverItem key={driver.id} driver={driver} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} listarEntidades={listarEntidades} />
                 ))
               )}
             </ul>
             <ul id="lista-resultados" className="text-left">
               {vehicles.length > 0 && (
                 vehicles.map((vehicle) => (
-                  <VehicleItem key={vehicle.id} vehicle={vehicle} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
+                  <VehicleItem key={vehicle.id} vehicle={vehicle} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} listarEntidades={listarEntidades} />
                 ))
               )}
             </ul>
