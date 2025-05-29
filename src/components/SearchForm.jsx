@@ -2,11 +2,17 @@ import { act, useState } from 'react';
 import { getDriverById } from '../services/driverServiceApi';
 import { getCoordinateById } from '../services/coordinatesServiceApi';
 import { getRouteById } from '../services/routeServiceApi';
+import { getVehicleById } from '../services/vehicleServiceApi';
+import { getAssignmentById } from '../services/assignmentServiceApi';
+import { getUserById } from '../services/userServiceApi';
 
 const services = {
   getConductorById: getDriverById,
   getDestinoById: getCoordinateById,
   getRutaById: getRouteById,
+  getVehiculoById: getVehicleById,
+  getAsignacionById: getAssignmentById,
+  getUsuarioById: getUserById,
 };
 
 export default function SearchForm({ activeEntity, setters, resetList }) {

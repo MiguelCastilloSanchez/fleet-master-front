@@ -63,7 +63,7 @@ export async function createAssignment(assignmentData) {
 }
 
 export async function updateAssignment(assignmentData) {
-  const response = await fetch(`${apiUrl}/assignment/${assignmentData.id}`, {
+  const response = await fetch(`${apiUrl}/assignment/${assignmentData.assignmentId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'

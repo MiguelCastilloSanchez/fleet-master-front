@@ -28,7 +28,7 @@ export default function CoordinateForm({ onSuccess }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <label className="flex flex-col">Nombre<input name="name"  value={formState.name} onChange={handleChange} placeholder="Nombre" required minLength={18} maxLength={25} className="border p-2 rounded" /></label>
+      <label className="flex flex-col">Nombre<input name="name"  minLength={25} maxLength={50} value={formState.name} onChange={handleChange} placeholder="Nombre" required className="border p-2 rounded" /></label>
       <label className="flex flex-col">Latitud<input name="latitude" type="number" value={formState.latitude} onChange={handleChange} placeholder="Latitud" required className="border p-2 rounded" /></label>
       <label className="flex flex-col">Altitud<input name="altitude" type="number" value={formState.altitude} onChange={handleChange} placeholder="Altitud" required className="border p-2 rounded" /></label>
 

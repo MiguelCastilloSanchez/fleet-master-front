@@ -16,13 +16,13 @@ function VehicleItem({ vehicle, setActiveForm, openConfirmation }) {
       )}
       <p>Fecha de registro: {vehicle.registrationDate}</p>
       <button
-        onClick={() => setActiveForm('vehicleUpdate', vehicle.id)}
+        onClick={() => setActiveForm('vehiculoUpdate', vehicle.id)}
         className="bg-blue-500 text-white px-4 py-2 rounded mx-3"
       >
         Editar
       </button>
       <button
-        onClick={() => openConfirmation('vehicle', vehicle.id)}
+        onClick={() => openConfirmation('vehiculo', vehicle.id)}
         className="text-red-600 hover:underline mx-3"
       >
         Eliminar

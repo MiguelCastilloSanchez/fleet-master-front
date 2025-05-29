@@ -32,11 +32,11 @@ export default function DriverForm({ onSuccess }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <label className="flex flex-col">Nombre<input name="name" value={formState.name} onChange={handleChange} placeholder="Nombre" required className="border p-2 rounded" /></label>
-      <label className="flex flex-col">CURP<input name="curp" value={formState.curp} onChange={handleChange} placeholder="CURP" required className="border p-2 rounded" /></label>
+      <label className="flex flex-col">CURP<input name="curp" minLength={18} maxLength={18} value={formState.curp} onChange={handleChange} placeholder="CURP" required className="border p-2 rounded" /></label>
       <label className="flex flex-col">Fecha de nacimiento<input name="birthDate" type="date" value={formState.birthDate} onChange={handleChange} placeholder="Fecha de nacimiento" required className="border p-2 rounded" /></label>
       <label className="flex flex-col">Dirección<input name="address" value={formState.address} onChange={handleChange} placeholder="Dirección" required className="border p-2 rounded" /></label>
       <label className="flex flex-col">Salario<input name="salary" type="number" step="0.01" value={formState.salary} onChange={handleChange} placeholder="Salario" required className="border p-2 rounded" /></label>
-      <label className="flex flex-col">Número de licencia<input name="licenseNumber" value={formState.licenseNumber} onChange={handleChange} placeholder="Número de licencia" required className="border p-2 rounded" /></label>
+      <label className="flex flex-col">Número de licencia<input name="licenseNumber" minLength={10} maxLength={10} value={formState.licenseNumber} onChange={handleChange} placeholder="Número de licencia" required className="border p-2 rounded" /></label>
 
       <div className="flex justify-end gap-2">
         <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">

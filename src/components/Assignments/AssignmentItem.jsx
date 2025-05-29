@@ -10,13 +10,13 @@ function AssignmentItem({ assignment, setActiveForm, openConfirmation }) {
       {assignment.endDate && <p>Fecha de fin: {assignment.endDate}</p>}
 
       <button
-        onClick={() => setActiveForm('assignmentUpdate', assignment.id)}
+        onClick={() => setActiveForm('asignacionUpdate', assignment.id)}
         className="bg-blue-500 text-white px-4 py-2 rounded mx-3"
       >
         Editar
       </button>
       <button
-        onClick={() => openConfirmation('assignment', assignment.id)}
+        onClick={() => openConfirmation('asignacion', assignment.id)}
         className="text-red-600 hover:underline mx-3"
       >
         Eliminar

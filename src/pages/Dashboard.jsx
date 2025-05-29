@@ -14,8 +14,8 @@ import VehicleItem from '../components/Vehicles/VehicleItem.jsx';
 import CoordinateForm from './Coordinates/CoordinateForm';
 import CoordinateItem from '../components/Coordinates/CoordinateItem.jsx';
 
-import AssignmentForm from './Assignment/AssignmentForm';
-import AssignmentUpdate from './Assignment/AssignmentUpdate';
+import AssignmentForm from './Assignments/AssignmentForm';
+import AssignmentUpdate from './Assignments/AssignmentUpdate';
 import AssignmentItem from '../components/Assignments/AssignmentItem.jsx';
 
 import RouteForm from './Routes/RouteForm';
