@@ -24,8 +24,6 @@ export default function AssignmentForm({ onSuccess }) {
   const [formState, setFormState] = useState({
     driverId: '',
     vehicleId: '',
-    startDate: '',
-    endDate: '',
   });
 
   const handleChange = (e) => {
@@ -78,29 +76,6 @@ export default function AssignmentForm({ onSuccess }) {
         </select>
       </label>
 
-      <label className="flex flex-col">
-        Fecha de inicio
-        <input
-          type="date"
-          name="startDate"
-          value={formState.startDate}
-          onChange={handleChange}
-          required
-          className="border p-2 rounded"
-        />
-      </label>
-
-            <label className="flex flex-col">
-        Fecha de cierre
-        <input
-          type="date"
-          name="endDate"
-          value={formState.endDate}
-          onChange={handleChange}
-          required
-          className="border p-2 rounded"
-        />
-      </label>
 
       <div className="flex justify-end gap-2">
         <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
