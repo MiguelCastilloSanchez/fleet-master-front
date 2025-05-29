@@ -5,7 +5,7 @@ import { getVehicles } from '../../services/vehicleServiceApi.js';
 
 export default function AssignmentUpdate({ onSuccess, assignmentId }) {
   const [formState, setFormState] = useState({
-    id: '',
+    assignmentId: assignmentId,
     driverId: '',
     vehicleId: '',
     startDate: '',
@@ -31,7 +31,7 @@ export default function AssignmentUpdate({ onSuccess, assignmentId }) {
       try {
         const assignment = await getAssignmentById(assignmentId);
         setFormState({
-          id: assignment.id,
+          assignmentId: assignment.id,
           driverId: assignment.driverId || '',
           vehicleId: assignment.vehicleId || '',
           startDate: assignment.startDate || '',
@@ -62,7 +62,7 @@ export default function AssignmentUpdate({ onSuccess, assignmentId }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <label className="font-bold">ID: {formState.id}</label>
+      <label className="font-bold">ID: {formState.assignmentId}</label>
 
       <label className="flex flex-col">
         Conductor

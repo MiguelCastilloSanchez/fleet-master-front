@@ -25,6 +25,7 @@ export default function AssignmentForm({ onSuccess }) {
     driverId: '',
     vehicleId: '',
     startDate: '',
+    endDate: '',
   });
 
   const handleChange = (e) => {
@@ -83,6 +84,18 @@ export default function AssignmentForm({ onSuccess }) {
           type="date"
           name="startDate"
           value={formState.startDate}
+          onChange={handleChange}
+          required
+          className="border p-2 rounded"
+        />
+      </label>
+
+            <label className="flex flex-col">
+        Fecha de cierre
+        <input
+          type="date"
+          name="endDate"
+          value={formState.endDate}
           onChange={handleChange}
           required
           className="border p-2 rounded"

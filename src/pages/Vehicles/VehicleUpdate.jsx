@@ -19,13 +19,9 @@ export default function VehicleUpdate({ onSuccess, vehicleId }) {
         const vehicle = await getVehicleById(vehicleId);
         setFormState({
           id: vehicle.id,
-          brand: vehicle.brand || '',
-          vin: vehicle.vin || '',
           plate: vehicle.plate || '',
-          purchaseDate: vehicle.purchaseDate || '',
           cost: vehicle.cost || '',
           photoUrl: vehicle.photoUrl || '',
-          registrationDate: vehicle.registrationDate || '',
         });
       } catch (err) {
         console.error('Error al cargar datos del vehículo:', err);
@@ -59,48 +55,12 @@ export default function VehicleUpdate({ onSuccess, vehicleId }) {
       <label className="font-bold">ID: {formState.id}</label>
 
       <label className="flex flex-col">
-        Marca
-        <input
-          name="brand"
-          value={formState.brand}
-          onChange={handleChange}
-          placeholder="Marca"
-          required
-          className="border p-2 rounded"
-        />
-      </label>
-
-      <label className="flex flex-col">
-        VIN
-        <input
-          name="vin"
-          value={formState.vin}
-          onChange={handleChange}
-          placeholder="VIN"
-          required
-          className="border p-2 rounded"
-        />
-      </label>
-
-      <label className="flex flex-col">
         Placa
         <input
           name="plate"
           value={formState.plate}
           onChange={handleChange}
           placeholder="Placa"
-          required
-          className="border p-2 rounded"
-        />
-      </label>
-
-      <label className="flex flex-col">
-        Fecha de compra
-        <input
-          type="date"
-          name="purchaseDate"
-          value={formState.purchaseDate}
-          onChange={handleChange}
           required
           className="border p-2 rounded"
         />
@@ -131,17 +91,6 @@ export default function VehicleUpdate({ onSuccess, vehicleId }) {
         />
       </label>
 
-      <label className="flex flex-col">
-        Fecha de registro
-        <input
-          type="date"
-          name="registrationDate"
-          value={formState.registrationDate}
-          onChange={handleChange}
-          required
-          className="border p-2 rounded"
-        />
-      </label>
 
       <div className="flex justify-end gap-2">
         <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">

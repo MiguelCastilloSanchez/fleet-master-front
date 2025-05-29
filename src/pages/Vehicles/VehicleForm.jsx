@@ -9,7 +9,6 @@ export default function VehicleForm({ onSuccess }) {
     purchaseDate: '',
     cost: '',
     photoUrl: '',
-    registrationDate: '',
   });
 
   const handleChange = (e) => {
@@ -50,6 +49,8 @@ export default function VehicleForm({ onSuccess }) {
         VIN
         <input
           name="vin"
+          minLength={17}
+          maxLength={17}
           value={formState.vin}
           onChange={handleChange}
           placeholder="VIN"
@@ -107,17 +108,6 @@ export default function VehicleForm({ onSuccess }) {
         />
       </label>
 
-      <label className="flex flex-col">
-        Fecha de registro
-        <input
-          type="date"
-          name="registrationDate"
-          value={formState.registrationDate}
-          onChange={handleChange}
-          required
-          className="border p-2 rounded"
-        />
-      </label>
 
       <div className="flex justify-end gap-2">
         <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
