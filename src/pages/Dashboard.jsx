@@ -150,7 +150,7 @@ function Dashboard() {
       case 'admin':
         return <UserUpdate />;
       case 'vehiculoUpdate':
-        return <VehicleUpdate vehicleId={selectedId}/>;
+        return <VehicleUpdate vehicleId={selectedId} />;
       case 'conductorUpdate':
         return <DriverUpdate driverId={selectedId} />;
       case 'asignacionUpdate':
@@ -158,7 +158,7 @@ function Dashboard() {
       case 'rutaUpdate':
         return <RouteUpdate routeId={selectedId} />;
       case 'adminUpdate':
-        return <UserUpdate userId={selectedId}/>;
+        return <UserUpdate userId={selectedId} />;
       default:
         return null;
     }
@@ -166,14 +166,22 @@ function Dashboard() {
 
   async function fetchSummaryData() {
     try {
-      const [driversData, routesData, vehiclesData] = await Promise.all([
+      const [usersData, driversData, routesData, vehiclesData] = await Promise.all([
+        1,
         getDrivers(),
         getRoutes(),
-        1//getVehicles()
+        getVehicles()
       ]);
 
       const today = new Date().toLocaleDateString('en-CA');
       console.log("todayLocal fecha: " + today);
+
+      /*
+      Usuarios creados hoy
+      const usersCreatedToday = usersData.filter(user => {
+        return user.systemEntryDate === today;
+      });
+      */
 
       const driversCreatedToday = driversData.filter(driver => {
         return driver.systemEntryDate === today;
@@ -184,16 +192,14 @@ function Dashboard() {
         return route.createdDate === today;
       });
 
-      /*
-      // Vehículos registrados hoy
       const vehiclesRegisteredToday = vehiclesData.filter(vehicle => {
         console.log("Vehículo fecha: " + vehicle.registrationDate);
         return vehicle.registrationDate === today;
       });
-      setTodayVehicles(vehiclesRegisteredToday.length);
-      */
 
+      setTodayUsers(usersData);
       setTodayRoutes(routesCreatedToday.length);
+      setTodayVehicles(vehiclesRegisteredToday.length);
       setTodayDrivers(driversCreatedToday.length);
 
 
