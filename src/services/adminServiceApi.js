@@ -16,11 +16,9 @@ export async function createAdmin(adminData) {
   const response = await fetch(`${apiAuthUrl}/admin`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`
+      'Content-Type': 'application/json'
     },
     body: body_test,
-    credentials: 'include'
   });
 
   if (!response.ok) {
@@ -39,8 +37,7 @@ export async function loginAdmin(adminData) {
   const response = await fetch(`${apiAuthUrl}/login`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`
+      'Content-Type': 'application/json'
     },
     body: body_test
   });
