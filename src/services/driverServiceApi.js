@@ -79,5 +79,10 @@ export async function getDriverById(id) {
 export async function deleteDriver(id) {
   const response = await fetch(`${apiUrl}/driver/${id}`, {
     method: 'DELETE',
+    headers: {
+      'ngrok-skip-browser-warning': 'true',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
   });
 }

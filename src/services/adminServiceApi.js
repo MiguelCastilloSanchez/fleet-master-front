@@ -16,6 +16,7 @@ export async function createAdmin(adminData) {
   const response = await fetch(`${apiAuthUrl}/admin`, {
     method: 'POST',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json'
     },
     body: body_test,
@@ -37,6 +38,7 @@ export async function loginAdmin(adminData) {
   const response = await fetch(`${apiAuthUrl}/login`, {
     method: 'POST',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json'
     },
     body: body_test
@@ -53,6 +55,7 @@ export async function deleteAdmin(id) {
   const response = await fetch(`${apiAuthUrl}/admin/${id}`, {
     method: 'DELETE',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
@@ -69,6 +72,7 @@ export async function updateAdmin(adminData) {
   const response = await fetch(`${apiAuthUrl}/admin/${adminData.id}`, {
     method: 'PUT',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
@@ -88,6 +92,7 @@ export async function getAdminById(id) {
   const response = await fetch(`${apiAuthUrl}/admin/${id}`, {
     method: 'GET',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
