@@ -16,8 +16,7 @@ export async function createAdmin(adminData) {
   const response = await fetch(`${apiAuthUrl}/admin`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`
+      'Content-Type': 'application/json'
     },
     body: body_test,
     credentials: 'include'
@@ -39,8 +38,7 @@ export async function loginAdmin(adminData) {
   const response = await fetch(`${apiAuthUrl}/login`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`
+      'Content-Type': 'application/json'
     },
     body: body_test
   });
@@ -49,5 +47,72 @@ export async function loginAdmin(adminData) {
     throw new Error('Error al iniciar sesión');
   }
 
+  return response.json();
+}
+
+export async function deleteAdmin(id) {
+  const response = await fetch(`${apiAuthUrl}/admin/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al eliminar el administrador');
+  }
+
+  return response.json();
+}
+
+export async function updateAdmin(adminData) {
+  const response = await fetch(`${apiAuthUrl}/admin/${adminData.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
+    body: JSON.stringify({
+      ...adminData,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al actualizar el administrador');
+  }
+
+  return response.json();
+}
+
+export async function getAdminById(id) {
+  const response = await fetch(`${apiAuthUrl}/admin/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al recuperar el admin');
+  }
+
+  return response.json();
+}
+
+export async function getAdmins() {
+  const response = await fetch(`${apiAuthUrl}/admin`, {
+    method: 'GET',
+    headers: {
+      'ngrok-skip-browser-warning': 'true',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al recuperar los admins');
+  }
   return response.json();
 }

@@ -22,18 +22,17 @@ import RouteForm from './Routes/RouteForm';
 import RouteUpdate from './Routes/RouteUpdate';
 import RouteItem from '.././components/Routes/RouteItem.jsx'
 
-import UserForm from './Users/UserForm';
-import UserUpdate from './Users/UserUpdate';
-import UserItem from '../components/Users/UserItem.jsx';
+import AdminUpdate from './Admins/AdminUpdate';
 
 import { deleteDriver, getDrivers } from '../services/driverServiceApi.js';
 import { deleteVehicle, getVehicles } from '../services/vehicleServiceApi.js';
 import { deleteCoordinate, getCoordinates } from '../services/coordinatesServiceApi.js';
 import { deleteAssignment, getActiveAssignmentsByDriver, getActiveAssignmentsByVehicle, getAssignmentHistory, getAssignments, getDriverAssignmentHistory, getVehicleAssignmentHistory } from '../services/assignmentServiceApi.js';
 import { deleteRoute, getRoutes } from '../services/routeServiceApi.js';
-import { deleteUser, getUsers } from '../services/userServiceApi.js';
+import { deleteAdmin, getAdmins } from '../services/adminServiceApi.js';
 
 import SearchForm from '../components/SearchForm.jsx';
+import AdminItem from '../components/Admins/AdminItem.jsx';
 
 
 function Dashboard() {
@@ -42,7 +41,7 @@ function Dashboard() {
     return <div className="text-red-500">No tienes permiso para acceder a esta página.</div>;
   }
 
-  const [todayUsers, setTodayUsers] = useState(0);
+  const [todayAdmins, setTodayAdmins] = useState(0);
   const [todayRoutes, setTodayRoutes] = useState(0);
   const [todayVehicles, setTodayVehicles] = useState(0);
   const [todayDrivers, setTodayDrivers] = useState(0);
@@ -57,7 +56,7 @@ function Dashboard() {
     { name: 'Destinos', label: 'Crear destino', value: 'destino' },
     { name: 'Asignaciones', label: 'Crear asignación', value: 'asignacion' },
     { name: 'Rutas', label: 'Crear ruta', value: 'ruta' },
-    { name: 'Administradores', label: 'Opciones de administrador', value: 'admin' },
+    { name: 'Administradores', value: 'admin' },
   ];
 
   const [activeForm, setActiveForm] = useState(null);
@@ -66,7 +65,7 @@ function Dashboard() {
   const [coordinates, setCoordinates] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [routes, setRoutes] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [admins, setAdmins] = useState([]);
   const [activeEntity, setActiveEntity] = useState(null);
 
 
@@ -127,8 +126,8 @@ function Dashboard() {
         setRoutes(routesData);
         return
       case 'admin':
-        const usersData = await getUsers();
-        setUsers(usersData);
+        const adminsData = await getAdmins();
+        setAdmins(adminsData);
         return
       default:
         return null;
@@ -163,7 +162,7 @@ function Dashboard() {
     setCoordinates([]);
     setAssignments([]);
     setRoutes([]);
-    setUsers([]);
+    setAdmins([]);
   }
 
   const renderForm = () => {
@@ -178,8 +177,6 @@ function Dashboard() {
         return <AssignmentForm />;
       case 'ruta':
         return <RouteForm />;
-      case 'admin':
-        return <UserUpdate />;
       case 'vehiculoUpdate':
         return <VehicleUpdate vehicleId={selectedId} />;
       case 'conductorUpdate':
@@ -189,7 +186,7 @@ function Dashboard() {
       case 'rutaUpdate':
         return <RouteUpdate routeId={selectedId} />;
       case 'adminUpdate':
-        return <UserUpdate userId={selectedId} />;
+        return <AdminUpdate adminId={selectedId} />;
       default:
         return null;
     }
@@ -197,8 +194,8 @@ function Dashboard() {
 
   async function fetchSummaryData() {
     try {
-      const [usersData, driversData, routesData, vehiclesData] = await Promise.all([
-        1,
+      const [adminsData, driversData, routesData, vehiclesData] = await Promise.all([
+        getAdmins(),
         getDrivers(),
         getRoutes(),
         getVehicles()
@@ -206,12 +203,7 @@ function Dashboard() {
 
       const today = new Date().toLocaleDateString('en-CA');
       
-      /*
-      Usuarios creados hoy
-      const usersCreatedToday = usersData.filter(user => {
-        return user.systemEntryDate === today;
-      });
-      */
+
 
       const driversCreatedToday = driversData.filter(driver => {
         return driver.systemEntryDate === today;
@@ -225,7 +217,7 @@ function Dashboard() {
         return vehicle.registrationDate === today;
       });
 
-      setTodayUsers(usersData);
+      setTodayAdmins(adminsData.length);
       setTodayRoutes(routesCreatedToday.length);
       setTodayVehicles(vehiclesRegisteredToday.length);
       setTodayDrivers(driversCreatedToday.length);
@@ -266,7 +258,9 @@ function Dashboard() {
         <div className=" rounded-full bg-white dark:bg-gray-950">
           <div className="flex items-center justify-between gap-8 px-4 sm:px-6">
             <div className="flex items-center gap-6 overflow-x-auto p-1">
-              {entities.map((form) => (
+              {entities
+              .filter(form => form.value !== 'admin')
+              .map((form) => (
                 <button
                   key={form.value}
                   onClick={() => handleClick(form.value)}
@@ -281,7 +275,7 @@ function Dashboard() {
 
       <div className="p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          <Card title="Usuarios creados" count={todayUsers} />
+          <Card title="Usuarios creados" count={todayAdmins} />
           <Card title="Viajes del día" count={todayRoutes} />
           <Card title="Vehículos creados" count={todayVehicles} />
           <Card title="Conductores creados" count={todayDrivers} />
@@ -312,7 +306,7 @@ function Dashboard() {
           <SearchForm
             activeEntity={activeEntity}
             setters={
-              { conductor: setDrivers, vehiculo: setVehicles, destino: setCoordinates, asignacion: setAssignments, ruta: setRoutes, administrador: setUsers }
+              { conductor: setDrivers, vehiculo: setVehicles, destino: setCoordinates, asignacion: setAssignments, ruta: setRoutes, administrador: setAdmins }
             }
             resetList={resetList}
           />
@@ -354,9 +348,9 @@ function Dashboard() {
               )}
             </ul>
             <ul id="lista-resultados" className="text-left">
-              {users.length > 0 && (
-                users.map((user) => (
-                  <UserItem key={user.id} user={user} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
+              {admins.length > 0 && (
+                admins.map((admin) => (
+                  <AdminItem key={admin.id} admin={admin} setActiveForm={handleSetActiveForm} openConfirmation={openConfirmation} />
                 ))
               )}
             </ul>
@@ -421,7 +415,7 @@ function borrarEntidad(tipo, id) {
       deleteRoute(id);
       return
     case 'admin':
-      deleteUser(id);
+      deleteAdmin(id);
       return
     default:
       return null;

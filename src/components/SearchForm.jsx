@@ -4,7 +4,7 @@ import { getCoordinateById } from '../services/coordinatesServiceApi';
 import { getRouteById } from '../services/routeServiceApi';
 import { getVehicleById } from '../services/vehicleServiceApi';
 import { getAssignmentById } from '../services/assignmentServiceApi';
-import { getUserById } from '../services/userServiceApi';
+import { getAdminById } from '../services/adminServiceApi';
 
 const services = {
   getConductorById: getDriverById,
@@ -12,7 +12,7 @@ const services = {
   getRutaById: getRouteById,
   getVehiculoById: getVehicleById,
   getAsignacionById: getAssignmentById,
-  getUsuarioById: getUserById,
+  getAdminById: getAdminById,
 };
 
 export default function SearchForm({ activeEntity, setters, resetList }) {
