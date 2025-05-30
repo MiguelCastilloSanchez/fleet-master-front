@@ -34,16 +34,16 @@ function Register() {
         <div className="w-full max-w-md p-6 bg-gray-50 rounded shadow ">
             <h1 className="text-2xl font-bold mb-4">Registrate</h1>
             <form onSubmit={handleSubmit} className="p-4 max-w-md mx-auto">
-                <input className="border w-full mb-2 p-2 text-white" placeholder="Username" name="username" value={formState.username} onChange={handleChange} />
-                <input className="border w-full mb-2 p-2 text-white" placeholder="Password" name="password" value={formState.password} type="password" onChange={handleChange} />
-                <input className="border w-full mb-2 p-2 text-white" placeholder="Name" name="name" value={formState.name} onChange={handleChange} />
-                <input className="border w-full mb-2 p-2 text-white" placeholder="Email" name="email" value={formState.email} onChange={handleChange} />
+                <input className="border w-full mb-2 p-2 text-white" placeholder="Username" name="username" minLength={4} maxLength={20} value={formState.username} onChange={handleChange} />
+                <input className="border w-full mb-2 p-2 text-white" placeholder="Password" name="password"  minLength={8} maxLength={64} value={formState.password} type="password" onChange={handleChange} />
+                <input className="border w-full mb-2 p-2 text-white" placeholder="Name" name="name" minLength={2} maxLength={60} value={formState.name} onChange={handleChange} />
+                <input className="border w-full mb-2 p-2 text-white" placeholder="Email" type="email" name="email" minLength={3} maxLength={40} value={formState.email} onChange={handleChange} />
                 <input className="border w-full mb-2 p-2 text-white" placeholder="Code" name="code" value={formState.code} onChange={handleChange} />
                 <button className="bg-green-600 text-white w-full py-2">Register</button>
             </form>
             <div className="flex items-center gap-4 rounded-lg bg-white p-6 shadow-md outline outline-black/5 dark:bg-gray-800">
                 <p className="text-gray-700 dark:text-gray-400">
-                    <span className="font-medium text-gray-950 dark:text-white">¿Ya tienes cuenta?</span> entoces
+                    <span className="font-medium text-gray-950 dark:text-white">¿Ya tienes cuenta?</span> entonces
                     <span className="font-medium text-gray-950 dark:text-white"><a href="/login"> Iniciar sesión</a></span>
                 </p>
             </div>

@@ -34,7 +34,7 @@ function Login() {
             </form>
             <div className="flex items-center gap-4 rounded-lg bg-white p-6 shadow-md outline outline-black/5 dark:bg-gray-800">
                 <p className="text-gray-700 dark:text-gray-400">
-                    <span className="font-medium text-gray-950 dark:text-white">¿No tiene cuenta?</span> entoces
+                    <span className="font-medium text-gray-950 dark:text-white">¿No tiene cuenta?</span> entonces
                     <span className="font-medium text-gray-950 dark:text-white"><a href="/register"> Crear cuenta</a></span>
                 </p>
             </div>
