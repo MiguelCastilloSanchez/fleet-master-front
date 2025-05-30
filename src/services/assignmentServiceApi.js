@@ -56,6 +56,7 @@ export async function createAssignment(assignmentData) {
   const response = await fetch(`${apiUrl}/assignment`, {
     method: 'POST',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
@@ -74,6 +75,7 @@ export async function updateAssignment(assignmentData) {
   const response = await fetch(`${apiUrl}/assignment/${assignmentData.assignmentId}`, {
     method: 'PUT',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
@@ -90,7 +92,12 @@ export async function updateAssignment(assignmentData) {
 
 export async function deleteAssignment(id) {
   const response = await fetch(`${apiUrl}/assignment/${id}`, {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: {
+      'ngrok-skip-browser-warning': 'true',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
   });
 
   if (!response.ok) {

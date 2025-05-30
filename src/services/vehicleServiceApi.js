@@ -7,6 +7,7 @@ export async function createVehicle(vehicleData) {
   const response = await fetch(`${apiUrl}/vehicle`, {
     method: 'POST',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
@@ -27,6 +28,7 @@ export async function getVehicles() {
   const response = await fetch(`${apiUrl}/vehicle`, {
     method: 'GET',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
@@ -43,6 +45,7 @@ export async function getVehicleById(id) {
   const response = await fetch(`${apiUrl}/vehicle/${id}`, {
     method: 'GET',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
@@ -59,6 +62,7 @@ export async function updateVehicle(vehicleData) {
   const response = await fetch(`${apiUrl}/vehicle/${vehicleData.id}`, {
     method: 'PUT',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
@@ -78,6 +82,7 @@ export async function deleteVehicle(id) {
   const response = await fetch(`${apiUrl}/vehicle/${id}`, {
     method: 'DELETE',
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
